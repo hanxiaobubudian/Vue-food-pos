@@ -12,7 +12,7 @@
 
                 <el-table-column label="操作" width="100" fixed="right">
                   <template scope="scope">
-                    <el-button type="text" size="small">删除</el-button>
+                    <el-button type="text" size="small" @click="delSigleGoods(scope.row)">删除</el-button>
                     <el-button type="text" size="small" @click="addOrderList(scope.row)">增加</el-button>
                   </template>
                 </el-table-column>
@@ -22,7 +22,7 @@
               </div>
               <div class="div-btn">
                 <el-button type="warning">挂单</el-button>
-                <el-button type="danger">删除</el-button>
+                <el-button type="danger" @click="delAllGoods">删除</el-button>
                 <el-button type="success">结账</el-button>
               </div>
             </el-tab-pane>
@@ -166,11 +166,30 @@
           }
           this.tableData.push(newGoods)
         }
-        // 数量和价格的汇总
-        this.tableData.forEach((element) => {
-          this.totalCount += element.count
-          this.totalMoney = this.totalMoney + (element.price * element.count)
-        })
+       // 数量和价格的汇总
+        this.getAllMoney()
+      },
+      // 删除订单方法
+      delSigleGoods (goods) {
+        this.tableData = this.tableData.filter(o => o.goodsId !== goods.goodsId)
+        this.getAllMoney()
+      },
+      // 删除所有订单
+      delAllGoods () {
+        this.tableData = []
+        this.totalCount = 0
+        this.totalMoney = 0
+      },
+      // 价格数量计算
+      getAllMoney () {
+        this.totalCount = 0
+        this.totalMoney = 0
+        if (this.tableData) {
+          this.tableData.forEach(element => {
+            this.totalCount += element.count
+            this.totalMoney = this.totalMoney + (element.price * element.count)
+          })
+        }
       }
     }
   }
